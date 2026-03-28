@@ -7,8 +7,8 @@ license = "MIT"
 description = "High-performance, low-latency, lightweight multi-chain signing primitives"
 repository = "https://github.com/poyea/crypto-signer"
 readme = "README.md"
-keywords = ["crypto", "evm", "eip712", "signing", "blockchain"]
-categories = ["cryptography", "no-std"]
+keywords = ["ethereum", "bitcoin", "solana", "eip712", "signing"]
+categories = ["cryptography", "cryptography::cryptocurrencies", "no-std", "encoding", "algorithms"]
 rust-version = "1.94"
 
 [lib]
