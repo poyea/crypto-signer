@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Miscellaneous
 
 - Update CHANGELOG.md for v0.1.0
+- Update CHANGELOG.md for v0.1.1
 
 ## [0.1.0] - 2026-03-28
 
