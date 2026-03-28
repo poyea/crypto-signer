@@ -2,6 +2,7 @@
 name = "crypto-signer"
 version = "0.1.0"
 edition = "2021"
+authors = ["John Law <poyea@pm.me>"]
 license = "MIT"
 description = "High-performance, low-latency, lightweight multi-chain signing primitives"
 repository = "https://github.com/poyea/crypto-signer"
