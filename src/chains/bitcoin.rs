@@ -1,7 +1,7 @@
 /// Raw PSBT (Partially Signed Bitcoin Transaction) bytes, as defined in
 /// [BIP-174](https://github.com/bitcoin/bips/blob/master/bip-0174.mediawiki).
 ///
-/// Pass to [`HardwareWallet::sign_btc_psbt`] or your own signing backend.
+/// Pass to a [`HardwareWallet`](crate::hw::HardwareWallet) or your own signing backend.
 /// The crate does not parse PSBT internally — bring your own parser (e.g.
 /// the `bdk` or `bitcoin` crates) and hand the raw bytes here.
 ///
