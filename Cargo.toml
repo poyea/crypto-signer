@@ -11,6 +11,10 @@ keywords = ["crypto", "evm", "eip712", "signing", "blockchain"]
 categories = ["cryptography", "no-std"]
 rust-version = "1.94"
 
+[lib]
+name = "crypto_signer"
+crate-type = ["rlib", "staticlib"]
+
 [features]
 default = ["std", "evm", "k256-signer"]
 std = []
