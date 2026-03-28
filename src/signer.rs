@@ -1,10 +1,15 @@
 use crate::{Address, Signature};
 
+/// Error returned when a builder is missing a required field.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum BuildError {
+    /// No spender address was provided; call `.spender(addr)`.
     MissingSpender,
+    /// No token value was provided; call `.value(amount)`.
     MissingValue,
+    /// No nonce was provided; call `.nonce(n)`.
     MissingNonce,
+    /// No deadline was provided; call `.deadline(unix_ts)`.
     MissingDeadline,
 }
 
@@ -23,10 +28,22 @@ impl core::fmt::Display for BuildError {
 #[cfg(feature = "std")]
 impl std::error::Error for BuildError {}
 
+/// Core signing interface.
+///
+/// Implement this trait on any type that holds a private key — local, KMS-backed,
+/// or hardware. The crate provides a ready-made implementation via
+/// [`LocalK256Signer`](crate::backends::local_k256::LocalK256Signer).
+///
+/// A blanket `impl<T: Signer> Signer for &T` is provided so signers can be
+/// passed by reference without wrapping.
 pub trait Signer {
+    /// Error type returned when signing fails.
     type Error: core::fmt::Debug;
 
+    /// Return the Ethereum-style address derived from this signer's public key.
     fn address(&self) -> Address;
+
+    /// Sign a 32-byte pre-hashed digest. Returns a recoverable ECDSA signature.
     fn sign_hash(&self, hash: [u8; 32]) -> Result<Signature, Self::Error>;
 }
 

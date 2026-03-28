@@ -32,12 +32,22 @@ impl<E: std::error::Error + 'static> std::error::Error for PermitSignError<E> {
     }
 }
 
+/// EIP-2612 `Permit` payload — gasless ERC-20 approval via signature.
+///
+/// Encodes as: `keccak256(typeHash ‖ owner ‖ spender ‖ value ‖ nonce ‖ deadline)`.
+///
+/// Use [`PermitBuilder`] to construct and sign rather than filling fields directly.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Permit {
+    /// The token owner whose allowance is being set.
     pub owner: crate::Address,
+    /// The spender who will receive the allowance.
     pub spender: crate::Address,
+    /// Token amount to approve (in the token's base unit).
     pub value: u128,
+    /// On-chain nonce of `owner` (prevents replay).
     pub nonce: u64,
+    /// Unix timestamp after which the signature is invalid.
     pub deadline: u64,
 }
 
@@ -54,12 +64,20 @@ impl Eip712Type for Permit {
     }
 }
 
+/// EIP-712 `Order` payload for on-chain order-book protocols.
+///
+/// `side`: `0` = buy, `1` = sell (protocol-defined convention).
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Order {
+    /// Unique token/asset identifier.
     pub token_id: [u8; 32],
+    /// Order price in base units.
     pub price: u128,
+    /// Order size in base units.
     pub size: u128,
+    /// Order side: `0` = buy, `1` = sell.
     pub side: u8,
+    /// Per-user nonce to prevent replay.
     pub nonce: u64,
 }
 
@@ -76,6 +94,18 @@ impl Eip712Type for Order {
     }
 }
 
+/// Builder for an EIP-2612 [`Permit`] message.
+///
+/// Set all required fields then call [`build`](PermitBuilder::build) (returns
+/// an unsigned message) or [`build_and_sign`](PermitBuilder::build_and_sign)
+/// (builds and signs in one step).
+///
+/// The `owner` field is derived from the signer's address automatically.
+///
+/// # Errors
+///
+/// [`build`](PermitBuilder::build) and [`build_and_sign`](PermitBuilder::build_and_sign)
+/// return an error if any required field is missing.
 #[derive(Clone, Debug)]
 pub struct PermitBuilder {
     domain: Domain,
@@ -86,6 +116,7 @@ pub struct PermitBuilder {
 }
 
 impl PermitBuilder {
+    /// Create a new builder for the given EIP-712 domain.
     pub fn new(domain: Domain) -> Self {
         Self {
             domain,
@@ -96,26 +127,33 @@ impl PermitBuilder {
         }
     }
 
+    /// Set the spender address.
     pub fn spender(mut self, spender: crate::Address) -> Self {
         self.spender = Some(spender);
         self
     }
 
+    /// Set the token amount to approve.
     pub fn value(mut self, value: u128) -> Self {
         self.value = Some(value);
         self
     }
 
+    /// Set the owner's on-chain nonce.
     pub fn nonce(mut self, nonce: u64) -> Self {
         self.nonce = Some(nonce);
         self
     }
 
+    /// Set the Unix timestamp deadline.
     pub fn deadline(mut self, deadline: u64) -> Self {
         self.deadline = Some(deadline);
         self
     }
 
+    /// Build the unsigned [`Permit`] message, deriving `owner` from `signer.address()`.
+    ///
+    /// Call `.sign(signer)` on the result to produce a signed message.
     pub fn build<S: Signer>(
         self,
         signer: &S,

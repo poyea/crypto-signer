@@ -6,10 +6,12 @@ use core::fmt::Write;
 pub struct Address([u8; 20]);
 
 impl Address {
+    /// Construct an address from raw bytes.
     pub const fn new(bytes: [u8; 20]) -> Self {
         Self(bytes)
     }
 
+    /// Return the underlying 20 bytes.
     pub const fn as_bytes(&self) -> &[u8; 20] {
         &self.0
     }
@@ -29,6 +31,12 @@ impl fmt::Debug for Address {
     }
 }
 
+/// A recoverable ECDSA signature: recovery byte `v` plus 32-byte components `r` and `s`.
+///
+/// `v` is `27` or `28` (Ethereum convention). Some protocols use `0`/`1` instead;
+/// subtract `27` if needed.
+///
+/// Implements `serde::{Serialize, Deserialize}` when the `serde` feature is enabled.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Signature {
@@ -38,6 +46,7 @@ pub struct Signature {
 }
 
 impl Signature {
+    /// Construct a signature from its components.
     pub const fn new(v: u8, r: [u8; 32], s: [u8; 32]) -> Self {
         Self { v, r, s }
     }
