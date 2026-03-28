@@ -13,7 +13,7 @@ rust-version = "1.94"
 
 [lib]
 name = "crypto_signer"
-crate-type = ["rlib", "staticlib"]
+crate-type = ["rlib"]
 
 [features]
 default = ["std", "evm", "k256-signer"]

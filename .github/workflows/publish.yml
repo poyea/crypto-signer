@@ -49,7 +49,7 @@ jobs:
           tool: cross
 
       - name: Build static library
-        run: ${{ matrix.use_cross && 'cross' || 'cargo' }} build --release --all-features --target ${{ matrix.target }}
+        run: ${{ matrix.use_cross && 'cross' || 'cargo' }} rustc --release --all-features --target ${{ matrix.target }} -- --crate-type staticlib
         shell: bash
 
       - name: Package artifact (Unix)
