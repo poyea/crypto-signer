@@ -49,23 +49,23 @@ jobs:
           tool: cross
 
       - name: Build static library
-        run: ${{ matrix.use_cross && 'cross' || 'cargo' }} rustc --release --all-features --target ${{ matrix.target }} -- --crate-type staticlib
+        run: ${{ matrix.use_cross && 'cross' || 'cargo' }} build --release --all-features --target ${{ matrix.target }}
         shell: bash
 
       - name: Package artifact (Unix)
         if: runner.os != 'Windows'
         run: |
           STEM="libcrypto_signer-${{ github.ref_name }}-${{ matrix.target }}"
-          cp target/${{ matrix.target }}/release/libcrypto_signer.a "${STEM}.a"
-          tar czf "${STEM}.tar.gz" "${STEM}.a"
+          cp target/${{ matrix.target }}/release/libcrypto_signer.rlib "${STEM}.rlib"
+          tar czf "${STEM}.tar.gz" "${STEM}.rlib"
         shell: bash
 
       - name: Package artifact (Windows)
         if: runner.os == 'Windows'
         run: |
           $stem = "libcrypto_signer-${{ github.ref_name }}-${{ matrix.target }}"
-          Copy-Item "target\${{ matrix.target }}\release\crypto_signer.lib" "$stem.lib"
-          Compress-Archive -Path "$stem.lib" -DestinationPath "$stem.zip"
+          Copy-Item "target\${{ matrix.target }}\release\libcrypto_signer.rlib" "$stem.rlib"
+          Compress-Archive -Path "$stem.rlib" -DestinationPath "$stem.zip"
         shell: pwsh
 
       - name: Upload artifact
