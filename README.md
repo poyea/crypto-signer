@@ -1,7 +1,7 @@
 # crypto-signer
 
 [![CI](https://github.com/poyea/crypto-signer/actions/workflows/ci.yml/badge.svg)](https://github.com/poyea/crypto-signer/actions/workflows/ci.yml)
-[![Coverage >= 90%](https://img.shields.io/badge/coverage-%3E%3D90%25-brightgreen)](https://github.com/poyea/crypto-signer/actions/workflows/ci.yml)]
+[![Coverage >= 90%](https://img.shields.io/badge/coverage-%3E%3D90%25-brightgreen)](https://github.com/poyea/crypto-signer/actions/workflows/ci.yml)
 [![Rust 1.94+](https://img.shields.io/badge/rust-1.94%2B-orange)](https://www.rust-lang.org)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/poyea/crypto-signer/blob/main/LICENSE)
 
