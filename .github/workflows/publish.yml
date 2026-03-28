@@ -8,10 +8,20 @@ on:
 permissions:
   contents: write  # needed to push CHANGELOG.md and create GitHub Release
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
+  ci:
+    name: CI (lint, test, coverage, security, fuzz)
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+
   build-libs:
     name: Build (${{ matrix.target }})
     runs-on: ${{ matrix.os }}
+    needs: ci
     strategy:
       fail-fast: false
       matrix:
