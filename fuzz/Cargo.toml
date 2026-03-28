@@ -1,0 +1,19 @@
+[package]
+name = "crypto-signer-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+crypto-signer = { path = "..", features = ["evm"] }
+
+[[bin]]
+name = "typed_message"
+path = "fuzz_targets/typed_message.rs"
+test = false
+doc = false
+bench = false

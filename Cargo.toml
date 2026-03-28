@@ -1,0 +1,48 @@
+[package]
+name = "crypto-signer"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "High-performance, low-latency, lightweight multi-chain signing primitives"
+repository = "https://github.com/poyea/crypto-signer"
+rust-version = "1.94"
+
+[features]
+default = ["std", "evm", "k256-signer"]
+std = []
+evm = []
+bitcoin = []
+solana = []
+cosmos = ["dep:prost"]
+kms = []
+hw = []
+k256-signer = ["dep:k256"]
+ed25519-signer = ["dep:ed25519-dalek"]
+serde = ["dep:serde"]
+
+[dependencies]
+k256 = { version = "0.13", default-features = false, features = ["ecdsa"], optional = true }
+ed25519-dalek = { version = "2.1", default-features = false, optional = true }
+sha3 = { version = "0.10", default-features = false }
+sha2 = { version = "0.10", default-features = false }
+serde = { version = "1", features = ["derive"], optional = true }
+prost = { version = "0.13", default-features = false, features = ["derive"], optional = true }
+
+[dev-dependencies]
+criterion = "0.5"
+hex = "0.4"
+
+[[bench]]
+name = "eip712"
+harness = false
+
+[lints.clippy]
+all = "warn"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[profile.bench]
+opt-level = 3
+lto = "fat"
+codegen-units = 1

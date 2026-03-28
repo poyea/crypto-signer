@@ -1,0 +1,29 @@
+# Rust build artifacts
+/target/
+
+# Coverage outputs
+/target/llvm-cov-target/
+*.profraw
+*.profdata
+/coverage/
+
+# Benchmark and fuzz artifacts
+/criterion/
+/fuzz/artifacts/
+/fuzz/corpus/
+/fuzz/coverage/
+/fuzz/target/
+
+# Cargo local config backups
+/.cargo/config
+/.cargo/config.toml.bak
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
