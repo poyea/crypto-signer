@@ -92,7 +92,7 @@ fn eip2612_permit_typehash_matches_spec_constant() {
 /// Verify that signing a digest and then recovering the signer address returns
 /// the same address as the signer reports. This tests the full round-trip
 /// locally without requiring a live endpoint.
-#[cfg(all(feature = "k256-signer"))]
+#[cfg(feature = "k256-signer")]
 #[test]
 fn recover_signer_roundtrip() {
     use crypto_signer::backends::local_k256::LocalK256Signer;
@@ -113,7 +113,7 @@ fn recover_signer_roundtrip() {
 }
 
 /// Recovery must fail cleanly when `v` is neither 27 nor 28.
-#[cfg(all(feature = "k256-signer"))]
+#[cfg(feature = "k256-signer")]
 #[test]
 fn recover_signer_rejects_bad_v() {
     use crypto_signer::evm::RecoveryError;
