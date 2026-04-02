@@ -97,7 +97,7 @@ pub mod kms;
 #[cfg(feature = "hw")]
 pub mod hw;
 
-pub use signer::{BuildError, Signer};
+pub use signer::{BuildError, Signer, SignerType};
 pub use types::{Address, Signature};
 
 #[cfg(feature = "evm")]
@@ -105,7 +105,12 @@ pub use evm::{
     domain::Domain,
     eip712::{Eip712Type, Signed, TypedMessage, Unsigned},
     messages::{Order, Permit, PermitBuilder, PermitSignError},
+    network::NetworkConfig,
+    RecoveryError,
 };
+
+#[cfg(all(feature = "evm", feature = "k256-signer"))]
+pub use evm::recover_signer;
 
 #[cfg(feature = "bitcoin")]
 pub use chains::bitcoin::PsbtBytes;

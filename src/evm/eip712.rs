@@ -22,6 +22,7 @@ pub struct Signed;
 ///
 /// ```rust
 /// # #[cfg(feature = "evm")] {
+/// # extern crate alloc;
 /// use alloc::vec::Vec;
 /// use crypto_signer::evm::{abi, Eip712Type};
 ///

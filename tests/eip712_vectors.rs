@@ -88,3 +88,54 @@ fn eip2612_permit_typehash_matches_spec_constant() {
         "6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9"
     );
 }
+
+/// Verify that signing a digest and then recovering the signer address returns
+/// the same address as the signer reports. This tests the full round-trip
+/// locally without requiring a live endpoint.
+#[cfg(all(feature = "k256-signer"))]
+#[test]
+fn recover_signer_roundtrip() {
+    use crypto_signer::backends::local_k256::LocalK256Signer;
+    use crypto_signer::{recover_signer, Signer};
+    use k256::ecdsa::SigningKey;
+
+    let key = SigningKey::from_bytes(&[0x07_u8; 32].into()).expect("valid key");
+    let signer = LocalK256Signer::from_signing_key(key);
+
+    let digest = [0xde_u8; 32];
+    let sig = signer.sign_hash(digest).expect("signing must not fail");
+    let recovered = recover_signer(digest, &sig).expect("recovery must succeed");
+    assert_eq!(
+        recovered,
+        signer.address(),
+        "recovered address must match signer"
+    );
+}
+
+/// Recovery must fail cleanly when `v` is neither 27 nor 28.
+#[cfg(all(feature = "k256-signer"))]
+#[test]
+fn recover_signer_rejects_bad_v() {
+    use crypto_signer::evm::RecoveryError;
+    use crypto_signer::{recover_signer, Signature};
+
+    let sig = Signature::new(0, [0u8; 32], [0u8; 32]);
+    assert_eq!(
+        recover_signer([0u8; 32], &sig),
+        Err(RecoveryError::InvalidRecoveryId)
+    );
+}
+
+/// `NetworkConfig::polygon_mainnet()` returns chain ID 137.
+#[test]
+fn network_config_polygon_mainnet_chain_id() {
+    use crypto_signer::evm::NetworkConfig;
+    assert_eq!(NetworkConfig::polygon_mainnet().chain_id, 137);
+}
+
+/// `NetworkConfig::polygon_mumbai()` returns chain ID 80001.
+#[test]
+fn network_config_polygon_mumbai_chain_id() {
+    use crypto_signer::evm::NetworkConfig;
+    assert_eq!(NetworkConfig::polygon_mumbai().chain_id, 80001);
+}

@@ -232,7 +232,7 @@ dependencies = [
 
 [[package]]
 name = "crypto-signer"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "criterion",
  "ed25519-dalek",
