@@ -30,6 +30,7 @@ All implementations are spec-driven and validated against official test vectors:
 
 - **EIP-712**: [Official Mail example](https://github.com/ethereum/EIPs/blob/master/assets/eip-712/Example.js)
 - **EIP-2612**: Permit typehash constant verified against reference implementations
+- **EIP-55**: Address checksum verified against official test vectors
 - **Cosmos**: Protobuf SignDoc SHA-256 signing as per Tendermint/Cosmos SDK
 
 ## Usage
@@ -56,20 +57,41 @@ Run locally: `cargo bench --bench eip712 --features evm,k256-signer`
 ## Quick Start
 
 ```rust
-use crypto_signer::{Address, Domain, PermitBuilder};
+use crypto_signer::{Address, Domain, NetworkConfig, PermitBuilder, SignerType};
 
-let domain = Domain::new("USDC", "1", 137, Address::new([0x11; 20]));
+// Use a network preset or pass your own addresses
+let net = NetworkConfig::polygon_mainnet();
+let domain = Domain::new("USDC", "1", net.chain_id, net.usdc);
 
 let _unsigned = PermitBuilder::new(domain)
-	.spender(Address::new([0x22; 20]))
-	.value(1_000_000)
-	.nonce(0)
-	.deadline(1_700_000_000);
+    .spender(Address::new([0x22; 20]))
+    .value(1_000_000)
+    .nonce(0)
+    .deadline(1_700_000_000);
+
+// Distinguish EOA from Safe — never confuse the signing key address with the maker
+let signer_type = SignerType::Safe { funder: Address::new([0xAA; 20]) };
+let maker_address = signer_type.clob_address(Address::new([0xBB; 20])); // returns funder
+```
+
+### Verify a signature locally
+
+```rust
+use crypto_signer::recover_signer;
+
+let recovered = recover_signer(digest, &sig).unwrap();
+assert_eq!(recovered, signer.address()); // confirms key/config without a live endpoint
 ```
 
 ## Quality Gates and Getting Started
 
-CI runs on every push:
+CI runs on every push and pre-commit hook (`.githooks/pre-commit`):
+
+To enable the pre-commit hook locally:
+
+```bash
+git config core.hooksPath .githooks
+```
 
 - `cargo fmt --check` — code style
 - `cargo clippy --all-targets --all-features -- -D warnings` — lint warnings denied
